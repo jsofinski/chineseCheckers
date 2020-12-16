@@ -1,0 +1,21 @@
+Lobby: List of players
+When client connects    : S > C UPDATE PLAYERS NEW <nick>
+When client disconnect  : S > C UPDATE PLAYERS DELETE <nick>
+
+When client ready       : C > S: READY TRUE
+When client not ready   : C > S READY FALSE
+
+When client want to star game: C > S START GAME
+
+If possible to start: S > C for each client S > C SET INFO <player info> 
+    S > C STATE PLAY 
+
+Play:
+Changing active player  : S > C MAKE MOVE <player nick>
+Making MOVE             : C > S MOVE [a] [b]
+                    if successful: S > C MOVE SUCCESSFUL
+                    else        :  S > C MOVE FAILED <error code> // TODO: error handling
+Broadcast move:         : S > C UPDATE PAWN [a] [b]    // Pawn from 
+If somebody won the game: S > C WINNER <player nick> 
+If somebody disconnect  : S > C UPDATE PLYAERS DELETE <nick> 
+                    S > C MO
