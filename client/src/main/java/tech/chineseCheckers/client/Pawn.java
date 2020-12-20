@@ -8,9 +8,12 @@ import java.awt.geom.Ellipse2D;
 public class Pawn {
 	
 	Color color;
-	Shape shape;
+	int xPosition;
+	int yPosition;
 	String playerNick;
+	String id;
 	int size;
+	
 	
 	public String getPlayerNick() {
 		return playerNick;
@@ -23,12 +26,16 @@ public class Pawn {
 		this.size = size;
 	}
 	
-	public void setShape(int xPosition, int yPosition) {
-		this.shape = new Ellipse2D.Float(xPosition, yPosition, this.size, this.size);
+	public void setPosition(int xPosition, int yPosition) {
+		this.xPosition = xPosition;
+		this.yPosition = yPosition;
 	}
 	
-	public Shape getShape() {
-		return this.shape;
+	public int getX() {
+		return this.xPosition;
+	}
+	public int getY() {
+		return this.yPosition;
 	}
 	
 	public void setColor(Color color) {
@@ -39,4 +46,17 @@ public class Pawn {
 		return this.color;
 	}
 	
+	public String getId() {
+		return this.id;
+	}
+	
+	public void setId(String id) {
+		this.id = id;
+	}
+	public int getSize() {
+		return size;
+	}
+	public void setSize(int size) {
+		this.size = size;
+	}
 }
