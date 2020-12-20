@@ -9,9 +9,8 @@ public class GameConfig {
 	ArrayList<Field> fields = new ArrayList<Field>();
 	ArrayList<Player> players = new ArrayList<Player>();
 	
-	
 	public GameConfig() {
-		this.setPlayers(6);
+		this.setPlayers(3);
 		this.setFieldArray();
 	}
 	
