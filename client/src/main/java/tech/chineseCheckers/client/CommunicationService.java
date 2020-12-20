@@ -37,7 +37,7 @@ public class CommunicationService {
 		
 		try {
 			mess = in.readUTF();
-			System.out.println("CommServ got msg: " + mess);
+			System.out.println("Recieved: " + mess);
 			
 			return mess;
 		} catch (IOException e) {

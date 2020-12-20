@@ -12,7 +12,7 @@ public class Game {
 		gameConfig = new GameConfig();
 		this.name = name;
 	}
-	
+		
 	public void start() {
 		while (true) {
 			String input = this.server.getMessage();
@@ -23,12 +23,15 @@ public class Game {
 					gameFrame = new GameFrame(board, name);
 					break;
 				}
+				case "NUMBER_OF_PLAYERS": {
+					this.gameConfig.setPlayers(Integer.parseInt(res[1]));
+					break;
+				} 
 				case "MOVE": {
 					this.board.moveByIds(res[1], res[2]);
 					break;
 				} 
 				case "PLAYER": {
-					System.out.println("changing nicknames");
 					switch (res[1]) {
 						case ("1"):
 							this.gameConfig.players.get(0).setNick(res[2]);

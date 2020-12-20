@@ -38,8 +38,7 @@ public class StartMenu {
     }
     
     public String getName() {
-        return JOptionPane.showInputDialog(frame, "Choose a screen name:", "Game name selection",
+        return JOptionPane.showInputDialog(frame, "Podaj swój nick:", "Game name selection",
                 JOptionPane.PLAIN_MESSAGE);
     }
-    
 }

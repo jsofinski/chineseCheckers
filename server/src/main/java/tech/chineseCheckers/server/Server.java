@@ -6,6 +6,9 @@ import java.util.Iterator;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 public class Server {
 
 	private GameRules gameRules;
@@ -27,6 +30,9 @@ public class Server {
 			data.broadcast("PLAYER " + Integer.toString(i) + " " + iter.next());
 			i++;
 		}
+	}
+	private void sendPlayersAmountInfo() {
+		data.broadcast("NUMBER_OF_PLAYERS " + serverConfig.NOPlayers);
 	}
 	
 	
@@ -81,6 +87,7 @@ public class Server {
 			
 			UserInterface.print("All players ready, sending color info");
 			// Give all players informations about colors
+			sendPlayersAmountInfo();
 			sendColorInfo();
 			sendNickInfo();
 			
@@ -107,7 +114,7 @@ public class Server {
 	public static void main(String[] args) {
 		Config config = new Config();
 		config.port = 55000;
-		config.NOPlayers = 2;
+		config.NOPlayers = Integer.parseInt(JOptionPane.showInputDialog("Podaj liczbe graczy","2"));
 		ServerListener listener = new ServerListener(config.port, SharedData.getInstance());
 		Server s = new Server(listener, config, SharedData.getInstance());
 		s.start();

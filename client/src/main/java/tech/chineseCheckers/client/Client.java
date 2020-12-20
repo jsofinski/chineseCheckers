@@ -21,16 +21,14 @@ public class Client {
 		String name = "";
 		do {
 			returnMessage = server.getMessage();
-			System.out.println("Recived: " + returnMessage);
 			if(returnMessage.equals("NAME_GET")) {
 				name = startMenu.getName();
 				server.sentMessage("NAME_SET " + name);
 			}
 			
 		} while(!returnMessage.equals("NAME_ACCEPTED"));
-		
+				
 		Game game = new Game(server, name);
-
 		while(!returnMessage.equals("GAME_START")) {
 			game.start();
 		}

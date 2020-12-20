@@ -34,7 +34,6 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 		this.size = size;
 		this.fieldArray = gameConfig.fieldArray;
 		this.players = new ArrayList<Player>();
-		System.out.println("myname: " + myName);
 		for(Player player: gameConfig.players) {
 			this.players.add(player);
 			if (player.getNick().equals(myName)) {
@@ -73,15 +72,16 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 		g.fillRect(x - this.size/2, this.size/2, 100, 200);
 
 		for (Player player: this.players) {
-			g.setColor(Color.black);
 			if (player.equals(this.me)) {
-				g.setColor(player.getColor());
 				g.setFont(new Font("default", Font.BOLD, 12));
 			}
+			else {
+				g.setFont(new Font("default", Font.PLAIN, 12));
+			}
+			g.setColor(player.getColor());
 			g.drawString(player.getNick(), x, y);
-			g.setFont(new Font("default", Font.PLAIN, 12));
 			y += (this.size/2);
-
+			g.setColor(Color.black);
 		}
 	}
 	

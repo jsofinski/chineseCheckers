@@ -6,15 +6,16 @@ import java.util.ArrayList;
 
 public class GameConfig {
 	int[] fieldArray;
-	ArrayList<Field> fields = new ArrayList<Field>();
-	ArrayList<Player> players = new ArrayList<Player>();
-	
+	ArrayList<Field> fields;
+	ArrayList<Player> players;
+
 	public GameConfig() {
 		this.setPlayers(2);
 		this.setFieldArray();
 	}
 	
-	private void setPlayers(int playerAmount) {
+	protected void setPlayers(int playerAmount) {
+		this.players = new ArrayList<Player>();
 		Player player1 = new Player();
 		Player player2 = new Player();
 		Player player3 = new Player();
@@ -27,12 +28,6 @@ public class GameConfig {
 		player4.setColor(Color.magenta);
 		player5.setColor(Color.orange);
 		player6.setColor(Color.pink);
-		player1.setNick("player1");
-		player2.setNick("player2");
-		player3.setNick("player3");
-		player4.setNick("player4");
-		player5.setNick("player5");
-		player6.setNick("player6");
 		
 		switch (playerAmount) {
 			case 2:
@@ -83,6 +78,7 @@ public class GameConfig {
 	}
 
 	private void setFieldArray() {
+		this.fields = new ArrayList<Field>();
 		int[] tempArray = {1,2,3,4,13,12,11,10,9,10,11,12,13,4,3,2,1};
 		this.fieldArray = tempArray;
 	}
