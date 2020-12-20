@@ -65,7 +65,14 @@ public class Server {
 				}
 			}
 	
+			// Wait for all players to be ready
 			
+			UserInterface.print("Waiting for all players.");
+			
+			while(data.ready() != serverConfig.NOPlayers)
+				;
+			
+			UserInterface.print("All players ready, sending color info");
 			// Give all players informations about colors
 			sendColorInfo();
 			

@@ -41,7 +41,7 @@ public class PlayerHandler implements Runnable {
 			name = reciveName();
 
 			data.addPlayerSocket(player);
-			
+			data.setReady();
 			UserInterface.print(name + " joined.");
 			boolean connected = true;
 			while(connected) {

@@ -37,7 +37,7 @@ public class StandardGame implements Game {
 	}
 	
 	public StandardGame(GameRules rules) {
-		initGame();
+	//	initGame();
 		
 		
 	}

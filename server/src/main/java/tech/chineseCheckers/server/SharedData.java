@@ -10,6 +10,9 @@ public class SharedData {
 	
 	private Set<String> names;
 	private Set<PlayerSocket> players;
+	
+	private int ready;
+	
 	public Game game;
 	
 	private SharedData() {
@@ -39,6 +42,10 @@ public class SharedData {
 			}
 		}
 	}
+	
+	public void setReady() { synchronized(mutex) {ready++;} }
+	public void setNotReady() { synchronized(mutex) {ready--;}}
+	public int ready() {synchronized(mutex) {return ready;} }
 	
 	public Set<String> getNames() { 
 		synchronized(mutex) { return names; } }
