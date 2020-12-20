@@ -15,12 +15,14 @@ public class Server {
 	private Config serverConfig;
 	private SharedData data;
 	private ServerListener listener;
+	private Object lock;
 	
 	public Server(ServerListener listener, Config config, SharedData data) {
 		this.data = data;
 		this.serverConfig = config;
 		this.listener = listener;
 		this.gameRules = new GameRules();
+		this.lock = new Object();
 	}
 	
 	private void sendNickInfo() {
@@ -63,7 +65,7 @@ public class Server {
 			UserInterface.print("Starting game");
 
 			// Wait for players
-			UserInterface.print("Waiting for players");
+			UserInterface.print("Waiting for players to join");
 			
 			int currentPlayerNumber = 0;
 			
@@ -74,18 +76,19 @@ public class Server {
 				if(ph != null) {
 					currentPlayerNumber++;
 					UserInterface.print("Player connected");
+					ph.setLock(lock);
 					pool.execute(ph);
 				}
 			}
 	
 			// Wait for all players to be ready
 			
-			UserInterface.print("Waiting for all players.");
+			UserInterface.print("Waiting for player to be ready.");
 			
 			while(data.ready() != serverConfig.NOPlayers)
 				;
 			
-			UserInterface.print("All players ready, sending color info");
+			UserInterface.print("Sending info");
 			// Give all players informations about colors
 			sendPlayersAmountInfo();
 			sendColorInfo();
@@ -97,16 +100,17 @@ public class Server {
 			
 			Iterator<String> playerNames = data.getNames().iterator();
 			
-			while(data.game.ended()) {
+			while(!data.game.ended()) {
 				if(!playerNames.hasNext())
 					playerNames = data.getNames().iterator();
 				
 				data.broadcast("MOVE_NOW " + playerNames.next());
-				try {
-					pool.wait();
-				} catch (InterruptedException e) {
-					
-				}	
+				synchronized(lock) {
+					try {
+						lock.wait();
+					} catch (InterruptedException e) {
+					}
+				}
 			}
 		}
 	}

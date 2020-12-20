@@ -3,10 +3,8 @@ package tech.chineseCheckers.client;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.Scanner;
 
 public class CommunicationService {
 	
@@ -41,8 +39,8 @@ public class CommunicationService {
 			
 			return mess;
 		} catch (IOException e) {
-			System.out.println("Failed");
-			return "";
+			System.out.println("GET MESSAGE FAILED!");
+			return "ERROR";
 		}
 		
 	}

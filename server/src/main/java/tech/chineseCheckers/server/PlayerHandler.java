@@ -7,6 +7,7 @@ public class PlayerHandler implements Runnable {
 	PlayerSocket player;
 	
 	SharedData data;
+	Object lock;
 	
 	public PlayerHandler(PlayerSocket player, SharedData data) {
 		this.player = player;
@@ -35,6 +36,10 @@ public class PlayerHandler implements Runnable {
 		return temp;
 	}
 	
+	public void setLock(Object lock){
+		this.lock = lock;
+	}
+	
 	public void run() {
 		try {
 			name = reciveName();
@@ -52,9 +57,11 @@ public class PlayerHandler implements Runnable {
 						if(!data.game.interpretMove(input.substring(5)))
 							player.send("MOVE_BAD");
 						else {
-							System.out.println("trying to notify");
 							data.broadcast(input);
+							synchronized(lock) {
+								lock.notifyAll();
 							}
+						}
 					} break;
 				}
 			}

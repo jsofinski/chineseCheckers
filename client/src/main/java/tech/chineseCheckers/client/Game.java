@@ -28,9 +28,17 @@ public class Game {
 					break;
 				} 
 				case "MOVE": {
-					this.board.moveByIds(res[1], res[2]);
+					if(!board.myTurn())
+						this.board.moveByIds(res[1], res[2]);
 					break;
-				} 
+				}
+				case "MOVE_NOW": {
+					if(res[1].equals(this.name))
+						board.setMyTurn(true);
+					else
+						board.setMyTurn(false);
+					break;
+				}
 				case "PLAYER": {
 					switch (res[1]) {
 						case ("1"):
@@ -53,6 +61,9 @@ public class Game {
 							break;
 					}
 				} break;
+				case "ERROR": {
+					return;
+				}
 			}
 		}
 	}

@@ -27,6 +27,7 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 	Pawn activePawn;
 	Player me;
 	CommunicationService server;
+	boolean myTurn;
 
 	
 	public Board(int size, GameConfig gameConfig, CommunicationService server, String myName) {
@@ -44,6 +45,7 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 		this.setFields();
 		this.setPawns();
 		addMouseListener(this);
+		this.myTurn = false;
 	}
 	
 
@@ -238,7 +240,7 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 				System.out.println("MOVE " + fromField.getId() + " " + field.getId());
 				this.server.sentMessage(("MOVE " + fromField.getId() + " " + field.getId()));
 			}
-			
+				
 			this.activePawn.setPosition(field.getX(), field.getY());
 			this.activePawn = null;
 		}
@@ -269,7 +271,10 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 	            if ((new Ellipse2D.Float(field.getX(), field.getY(), field.getSize(), field.getSize())).contains(arg0.getPoint())) {
 	            	if (this.activePawn != null) {
 		            	//System.out.println((field.getBounds().x - this.activePawn.getShape().getBounds().x) + "  " + (field.getBounds().y - this.activePawn.getShape().getBounds().y));
-	            		this.movePawn(this.activePawn, field);
+	            		if(this.myTurn)
+	            			this.movePawn(this.activePawn, field);
+	            		else
+	            			System.out.println("Nie twoja tura.");
 	            		//System.out.println("ActivePawn change");
 	            	}
 	            	//System.out.println("field: x: " + arg0.getX() + "; y: " + arg0.getY());
@@ -278,6 +283,12 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 			}
 		}
 	}
+	
+	public void setMyTurn(boolean myTurn) {
+		System.out.println("Can move: " + myTurn);
+		this.myTurn = myTurn;
+	}
+	public boolean myTurn() {return myTurn;}
 
 	public void mouseEntered(MouseEvent arg0) {	}
 
