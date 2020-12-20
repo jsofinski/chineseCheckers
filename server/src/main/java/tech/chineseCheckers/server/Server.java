@@ -20,6 +20,14 @@ public class Server {
 		this.gameRules = new GameRules();
 	}
 	
+	private void sendNickInfo() {
+		Iterator<String> iter = data.getNames().iterator();
+		int i = 1;
+		while(iter.hasNext()) {
+			data.broadcast("PLAYER " + Integer.toString(i) + " " + iter.next());
+			i++;
+		}
+	}
 	
 	
 	private void sendColorInfo() {
@@ -33,9 +41,8 @@ public class Server {
 		Iterator<String> iter = data.getNames().iterator();
 		Iterator<String> col = colors.iterator();
 		while(iter.hasNext()) {
-			data.broadcast("COLOR_SET " + iter.next() + " " + col.next());
+			data.broadcast("COLOR_SET " + iter.next() + " " + col.next());	
 		}
-		
 	}
 	
 	public void start() {
@@ -75,6 +82,7 @@ public class Server {
 			UserInterface.print("All players ready, sending color info");
 			// Give all players informations about colors
 			sendColorInfo();
+			sendNickInfo();
 			
 			// Game
 			data.game = new StandardGame(gameRules);

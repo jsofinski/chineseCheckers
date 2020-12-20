@@ -15,8 +15,8 @@ public class GameFrame extends JFrame {
 	
 	int width;
 	int height;
-	public GameFrame(Board board) {
-		super("Chinese checkers");
+	public GameFrame(Board board, String name) {
+		super("Chinese checkers " + name);
 		add(board);
 		this.width = 1000;
 		this.height = 800;

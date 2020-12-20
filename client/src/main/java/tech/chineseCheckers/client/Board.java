@@ -25,21 +25,28 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 	ArrayList<Field> possibleFields;
 	ArrayList<Player> players;
 	Pawn activePawn;
-	Player whoseTurn;
+	Player me;
 	CommunicationService server;
+
 	
-	public Board(int size, GameConfig gameConfig, CommunicationService server) {
+	public Board(int size, GameConfig gameConfig, CommunicationService server, String myName) {
 		this.server = server;
 		this.size = size;
 		this.fieldArray = gameConfig.fieldArray;
 		this.players = new ArrayList<Player>();
+		System.out.println("myname: " + myName);
 		for(Player player: gameConfig.players) {
 			this.players.add(player);
+			if (player.getNick().equals(myName)) {
+				this.me = player;
+				System.out.println("Found myself");
+			}
 		}
 		this.setFields();
 		this.setPawns();
 		addMouseListener(this);
 	}
+	
 
 	public void paintComponent(Graphics g) {
 		this.paintFields(g);
@@ -66,13 +73,15 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 		g.fillRect(x - this.size/2, this.size/2, 100, 200);
 
 		for (Player player: this.players) {
-			if (player.equals(this.whoseTurn)) {
+			g.setColor(Color.black);
+			if (player.equals(this.me)) {
+				g.setColor(player.getColor());
 				g.setFont(new Font("default", Font.BOLD, 12));
 			}
-			g.setColor(Color.black);
 			g.drawString(player.getNick(), x, y);
 			g.setFont(new Font("default", Font.PLAIN, 12));
 			y += (this.size/2);
+
 		}
 	}
 	
@@ -244,14 +253,13 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 		for (Pawn pawn: this.pawns) {
 			if (pawn != null) {
 	            if ((new Ellipse2D.Float(pawn.getX(), pawn.getY(), pawn.getSize(), pawn.getSize())).contains(arg0.getPoint())) {
-	            	pawnFound = true;
-	            	this.activePawn = pawn;
-	            	for (Player player: this.players) {
-	            		if (player.getNick().equals(this.activePawn.getPlayerNick())) {
-	            			this.whoseTurn = player;
-	            		}
+	            	if (pawn.getPlayerNick().equals(this.me.getNick())) {
+		            	pawnFound = true;
+		            	this.activePawn = pawn;
 	            	}
-	            	//System.out.println("pawn: x: " + arg0.getX() + "; y: " + arg0.getY() + "; player: " + pawn.getPlayerNick());
+	            	else {
+	            		System.out.println("To nie twój pionek!");
+	            	}
 	            }
 	            this.repaint();
 			}
