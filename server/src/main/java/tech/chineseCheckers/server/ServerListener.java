@@ -29,7 +29,6 @@ public class ServerListener {
 		try {
 			PlayerSocket playerSocket = new PlayerSocket(listener.accept());
 			PlayerHandler playerHandler = new PlayerHandler(playerSocket, data);
-			
 			return playerHandler;
 			
 		} catch (IOException e) {

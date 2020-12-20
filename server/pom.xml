@@ -6,10 +6,15 @@
   <packaging>pom</packaging>
   <name>ChineseCheckers</name>
   <description>chicken</description>
-  <modules>
-      <module>client</module>
-      <module>server</module>
-  </modules>
+ 
+  <profiles>
+    <profile>
+        <modules>
+          <module>client</module>
+          <module>server</module>
+        </modules>
+    </profile>
+</profiles>
   <properties> 
       <maven.compiler.source>14</maven.compiler.source> 
       <maven.compiler.target>14</maven.compiler.target> 

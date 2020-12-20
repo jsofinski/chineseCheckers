@@ -91,11 +91,8 @@ public class Server {
 					pool.wait();
 				} catch (InterruptedException e) {
 					
-				}
-				
+				}	
 			}
-			
-			
 		}
 	}
 	

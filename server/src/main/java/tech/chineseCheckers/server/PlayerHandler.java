@@ -14,7 +14,6 @@ public class PlayerHandler implements Runnable {
 	}
 
 	private String reciveName() {
-		System.out.println("Inside ReciveName");
 		String temp;
 		while(true) {
 			Set<String> names = data.getNames();
@@ -53,8 +52,8 @@ public class PlayerHandler implements Runnable {
 						if(!data.game.interpretMove(input.substring(5)))
 							player.send("MOVE_BAD");
 						else {
-							
-							this.notify();
+							System.out.println("trying to notify");
+							data.broadcast(input);
 							}
 					} break;
 				}

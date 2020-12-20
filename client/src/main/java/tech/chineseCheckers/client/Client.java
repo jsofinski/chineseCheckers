@@ -13,11 +13,13 @@ public class Client {
 			System.out.println("Unable to connect");
 			return;
 		}
+		else {
+			System.out.println("Connected");
+		}
 		
 		String returnMessage;
 		String name = "";
 		do {
-			
 			returnMessage = server.getMessage();
 			System.out.println("Recived: " + returnMessage);
 			if(returnMessage.equals("NAME_GET")) {
@@ -28,7 +30,10 @@ public class Client {
 		} while(!returnMessage.equals("NAME_ACCEPTED"));
 		
 		Game game = new Game(server, name);
-		game.start();
+
+		while(!returnMessage.equals("GAME_START")) {
+			game.start();
+		}
 	}
 
 }

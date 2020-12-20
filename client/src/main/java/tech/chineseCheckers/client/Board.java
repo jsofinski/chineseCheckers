@@ -26,8 +26,10 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 	ArrayList<Player> players;
 	Pawn activePawn;
 	Player whoseTurn;
+	CommunicationService server;
 	
-	public Board(int size, GameConfig gameConfig) {
+	public Board(int size, GameConfig gameConfig, CommunicationService server) {
+		this.server = server;
 		this.size = size;
 		this.fieldArray = gameConfig.fieldArray;
 		this.players = new ArrayList<Player>();
@@ -196,17 +198,14 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 		Field fieldTo = null;
 		for (Field field: this.fields) {
 			if (field.getId().equals(idFrom)) {
-				System.out.println("fieldFrom found");
 				fieldFrom = field;
 			}
 			if (field.getId().equals(idTo)) {
-				System.out.println("fieldTo found");
 				fieldTo = field;
 			}
 		}
 		if (!this.isFieldOccupied(fieldTo)) {
 			if (this.isFieldOccupied(fieldFrom)) {
-				System.out.println("cyk szukamy pionka");
 				for (Pawn pawn: this.pawns) {
 					if (pawn.getX() == fieldFrom.getX() && pawn.getY() == fieldFrom.getY()) {
 						pawn.setPosition(fieldTo.getX(), fieldTo.getY());
@@ -214,6 +213,7 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 				}
 			}
 		}
+		this.repaint();
 	}
 	
 	private void movePawn(Pawn pawn, Field field) {
@@ -226,7 +226,8 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 				}
 			}
 			if (fromField != null) {
-				System.out.println(pawn.getPlayerNick() + ": MOVE FROM " + fromField.getId() + " TO " + field.getId() );
+				System.out.println("MOVE " + fromField.getId() + " " + field.getId());
+				this.server.sentMessage(("MOVE " + fromField.getId() + " " + field.getId()));
 			}
 			
 			this.activePawn.setPosition(field.getX(), field.getY());

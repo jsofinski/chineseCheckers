@@ -6,7 +6,7 @@ public class Config {
 	public int port;
 	
 	public Config() {
-		NOPlayers = 6;
+		NOPlayers = 2;
 		port = 55000;
 	}
 }

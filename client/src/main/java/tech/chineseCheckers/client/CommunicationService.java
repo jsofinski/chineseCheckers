@@ -32,11 +32,13 @@ public class CommunicationService {
 	}
 	
 	public String getMessage() {
-		System.out.println("Inside get.");
+		
 		String mess;
+		
 		try {
 			mess = in.readUTF();
-			System.out.println("Recieved" + mess);
+			System.out.println("CommServ got msg: " + mess);
+			
 			return mess;
 		} catch (IOException e) {
 			System.out.println("Failed");

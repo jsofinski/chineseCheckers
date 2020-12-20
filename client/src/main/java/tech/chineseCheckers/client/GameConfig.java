@@ -10,7 +10,7 @@ public class GameConfig {
 	ArrayList<Player> players = new ArrayList<Player>();
 	
 	public GameConfig() {
-		this.setPlayers(3);
+		this.setPlayers(2);
 		this.setFieldArray();
 	}
 	
