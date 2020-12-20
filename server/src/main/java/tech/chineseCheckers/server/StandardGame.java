@@ -41,16 +41,14 @@ public class StandardGame implements Game {
 		
 		
 	}
-
 	@Override
 	public boolean interpretMove(String str) {
-		// TODO Auto-generated method stub
+
 		return true;
 	}
-
 	@Override
 	public boolean ended() {
-		// TODO Auto-generated method stub
+
 		return false;
 	}
 }
