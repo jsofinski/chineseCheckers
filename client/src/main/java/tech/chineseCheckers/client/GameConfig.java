@@ -5,13 +5,14 @@ import java.awt.Shape;
 import java.util.ArrayList;
 
 public class GameConfig {
-	int[] fieldArray = {1,2,3,4,13,12,11,10,9,10,11,12,13,4,3,2,1};
-	ArrayList<Shape> fields = new ArrayList<Shape>();
+	int[] fieldArray;
+	ArrayList<Field> fields = new ArrayList<Field>();
 	ArrayList<Player> players = new ArrayList<Player>();
 	
 	
 	public GameConfig() {
 		this.setPlayers(6);
+		this.setFieldArray();
 	}
 	
 	private void setPlayers(int playerAmount) {
@@ -82,4 +83,8 @@ public class GameConfig {
 		}
 	}
 
+	private void setFieldArray() {
+		int[] tempArray = {1,2,3,4,13,12,11,10,9,10,11,12,13,4,3,2,1};
+		this.fieldArray = tempArray;
+	}
 }

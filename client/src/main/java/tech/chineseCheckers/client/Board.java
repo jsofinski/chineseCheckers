@@ -39,14 +39,13 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 		addMouseListener(this);
 	}
 
-	
 	public void paintComponent(Graphics g) {
 		this.paintFields(g);
+		this.paintPawns(g);
+		this.printPlayers(g);
 		if (this.activePawn != null) {
 			this.setPossibleFields(g);
 		}
-		this.paintPawns(g);
-		this.printPlayers(g);
 	}
 	
 	private void paintPawns(Graphics g) {
@@ -78,7 +77,7 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 	private void paintFields(Graphics g) {
 		for (Field field: this.fields) {
 			g.setColor(Color.LIGHT_GRAY);
-			g.fillOval(field.getxPosition(), field.getyPosition(), field.getSize(), field.getSize());
+			g.fillOval(field.getX(), field.getY(), field.getSize(), field.getSize());
 		}
 	}
 
@@ -110,7 +109,7 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 			for (int i: this.fieldArray) {
 				xPosition = xPosition - (i*this.size / 2);
 				for(int j = 0; j < i; j++) {
-					System.out.println("row: " + row + "; j: " + j);
+					//System.out.println("row: " + row + "; j: " + j);
 					int[] playerPawnsPositions = player.getPlayerPawnsPositions()[row];
 					if(playerPawnsPositions.length != 0) {	// wchodzimy jeœli player ma w tym wierszu jakieœ pionki
 						for (int k: playerPawnsPositions) {	
@@ -134,8 +133,8 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 	}	
 	
 	private boolean canPawnMoveThere(Pawn pawn, Field field) {
-		int fieldX = field.getxPosition();
-		int fieldY = field.getyPosition();
+		int fieldX = field.getX();
+		int fieldY = field.getY();
 		int pawnX = pawn.getX();
 		int pawnY = pawn.getY();
 		if ((Math.abs(fieldX - pawnX) == this.size &&
@@ -149,7 +148,7 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 	
 	private boolean isFieldOccupied(Field field) {
 		for (Pawn anyPawn: this.pawns) {
-			if (anyPawn.getX() == field.getxPosition() && anyPawn.getY() == field.getyPosition()) {
+			if (anyPawn.getX() == field.getX() && anyPawn.getY() == field.getY()) {
 				return true;
 			}
 		}
@@ -157,10 +156,10 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 	}
 	
 	private boolean canPawnHopThere(Pawn pawn, Field jumpOverField, Field destinationField) {
-		int innerDistanceX = (jumpOverField.getxPosition() - this.activePawn.getX());
-		int innerDistanceY = (jumpOverField.getyPosition() - this.activePawn.getY());
-		int fieldsDistanceX = (destinationField.getxPosition() - jumpOverField.getxPosition());
-		int fieldsDistanceY = (destinationField.getyPosition() - jumpOverField.getyPosition());
+		int innerDistanceX = (jumpOverField.getX() - this.activePawn.getX());
+		int innerDistanceY = (jumpOverField.getY() - this.activePawn.getY());
+		int fieldsDistanceX = (destinationField.getX() - jumpOverField.getX());
+		int fieldsDistanceY = (destinationField.getY() - jumpOverField.getY());
 		if (innerDistanceX == fieldsDistanceX && innerDistanceY == fieldsDistanceY) {
 			if(!this.isFieldOccupied(destinationField)) {
 				return true;
@@ -176,19 +175,45 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 				if (!this.isFieldOccupied(field)) {
 					this.possibleFields.add(field);
 					g.setColor(Color.GRAY);
-					g.fillOval(field.getxPosition(), field.getyPosition(), field.getSize(), field.getSize());
+					g.fillOval(field.getX(), field.getY(), field.getSize(), field.getSize());
 				}
 				else {
 					for (Field innerField: this.fields) {
 						if(this.canPawnHopThere(this.activePawn, field, innerField)) {
-							this.possibleFields.add(innerField);
-							g.setColor(Color.GRAY);
-							g.fillOval(field.getxPosition(), field.getyPosition(), field.getSize(), field.getSize());
+							if (!this.isFieldOccupied(innerField)) {
+								this.possibleFields.add(innerField);
+								g.setColor(Color.GRAY);
+								g.fillOval(innerField.getX(), innerField.getY(), innerField.getSize(), innerField.getSize());
+							}
 						}
 					}
 				}
-			}		
-		}	
+			}
+		}
+	}
+	public void moveByIds(String idFrom, String idTo) {
+		Field fieldFrom = null;
+		Field fieldTo = null;
+		for (Field field: this.fields) {
+			if (field.getId().equals(idFrom)) {
+				System.out.println("fieldFrom found");
+				fieldFrom = field;
+			}
+			if (field.getId().equals(idTo)) {
+				System.out.println("fieldTo found");
+				fieldTo = field;
+			}
+		}
+		if (!this.isFieldOccupied(fieldTo)) {
+			if (this.isFieldOccupied(fieldFrom)) {
+				System.out.println("cyk szukamy pionka");
+				for (Pawn pawn: this.pawns) {
+					if (pawn.getX() == fieldFrom.getX() && pawn.getY() == fieldFrom.getY()) {
+						pawn.setPosition(fieldTo.getX(), fieldTo.getY());
+					}
+				}
+			}
+		}
 	}
 	
 	private void movePawn(Pawn pawn, Field field) {
@@ -196,7 +221,7 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 		if(this.possibleFields.contains(field)) {
 			Field fromField = field;
 			for(Field pawnField: this.fields) {
-				if (pawn.getX() == pawnField.getxPosition() && pawn.getY() == pawnField.getyPosition()) {
+				if (pawn.getX() == pawnField.getX() && pawn.getY() == pawnField.getY()) {
 					fromField = pawnField;
 				}
 			}
@@ -204,7 +229,7 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 				System.out.println(pawn.getPlayerNick() + ": MOVE FROM " + fromField.getId() + " TO " + field.getId() );
 			}
 			
-			this.activePawn.setPosition(field.getxPosition(), field.getyPosition());
+			this.activePawn.setPosition(field.getX(), field.getY());
 			this.activePawn = null;
 		}
 		else {
@@ -232,7 +257,7 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
         }
 		if (!pawnFound) {
 			for (Field field: this.fields) {
-	            if ((new Ellipse2D.Float(field.getxPosition(), field.getyPosition(), field.getSize(), field.getSize())).contains(arg0.getPoint())) {
+	            if ((new Ellipse2D.Float(field.getX(), field.getY(), field.getSize(), field.getSize())).contains(arg0.getPoint())) {
 	            	if (this.activePawn != null) {
 		            	//System.out.println((field.getBounds().x - this.activePawn.getShape().getBounds().x) + "  " + (field.getBounds().y - this.activePawn.getShape().getBounds().y));
 	            		this.movePawn(this.activePawn, field);

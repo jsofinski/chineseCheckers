@@ -25,22 +25,22 @@ public class Field {
 		return this.size;
 	}
 	
-	public void setSize(Int size) {
+	public void setSize(int size) {
 		this.size = size;
 	}
-	public int getxPosition() {
+	public int getX() {
 		return xPosition;
 	}
 
-	public void setxPosition(int xPosition) {
+	public void setX(int xPosition) {
 		this.xPosition = xPosition;
 	}
 
-	public int getyPosition() {
+	public int getY() {
 		return yPosition;
 	}
 
-	public void setyPosition(int yPosition) {
+	public void setY(int yPosition) {
 		this.yPosition = yPosition;
 	}
 }
