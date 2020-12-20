@@ -52,8 +52,10 @@ public class PlayerHandler implements Runnable {
 					case "MOVE": {
 						if(!data.game.interpretMove(input.substring(5)))
 							player.send("MOVE_BAD");
-						else
+						else {
+							
 							this.notify();
+							}
 					} break;
 				}
 			}

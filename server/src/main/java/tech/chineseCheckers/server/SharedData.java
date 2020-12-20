@@ -31,6 +31,14 @@ public class SharedData {
 	}
 	
 	
+	public void broadcast(String message) {
+		synchronized(mutex) {
+			Set<PlayerSocket> players = getPlayerSockets();
+			for(PlayerSocket player : players) {
+				player.send(message);
+			}
+		}
+	}
 	
 	public Set<String> getNames() { 
 		synchronized(mutex) { return names; } }

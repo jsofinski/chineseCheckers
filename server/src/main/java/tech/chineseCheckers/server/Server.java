@@ -1,7 +1,5 @@
 package tech.chineseCheckers.server;
 
-import java.io.IOException;
-import java.net.ServerSocket;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -10,29 +8,19 @@ import java.util.concurrent.Executors;
 
 public class Server {
 
-	private int playerNumber;
 	private GameRules gameRules;
+	private Config serverConfig;
+	private SharedData data;
+	private ServerListener listener;
 	
-	private static SharedData data;
-	
-	public Server() {
-		data = SharedData.getInstance();
-	}
-	
-	public static void broadcast(String message) {
-		Set<PlayerSocket> players = data.getPlayerSockets();
-		synchronized (players) {
-			for(PlayerSocket player : players) {
-				player.send(message);
-			}
-		}
+	public Server(ServerListener listener, Config config, SharedData data) {
+		this.data = data;
+		this.serverConfig = config;
+		this.listener = listener;
+		this.gameRules = new GameRules();
 	}
 	
 	
-	private void getNewConfig() {
-		playerNumber = UserInterface.getInt("Podaj liczbe graczy.");
-		gameRules = new GameRules();
-	}
 	
 	private void sendColorInfo() {
 		Set<String> colors = new HashSet<String>();
@@ -45,18 +33,22 @@ public class Server {
 		Iterator<String> iter = data.getNames().iterator();
 		Iterator<String> col = colors.iterator();
 		while(iter.hasNext()) {
-			broadcast("COLOR_SET " + iter.next() + " " + col.next());
+			data.broadcast("COLOR_SET " + iter.next() + " " + col.next());
 		}
 		
 	}
 	
 	public void start() {
 		UserInterface.print("Starting server");
+		
+		if(!listener.isGood()) {
+			UserInterface.print("Unable to create listener");
+			return;
+		}
+		
 		while(true) {
 			UserInterface.print("Starting game");
-			
-			getNewConfig();
-			
+
 			// Wait for players
 			UserInterface.print("Waiting for players");
 			
@@ -64,21 +56,21 @@ public class Server {
 			
 			Executor pool = Executors.newFixedThreadPool(6);
 			
-			try (ServerSocket listener = new ServerSocket(59001)) {
-				while(currentPlayerNumber < playerNumber) {
-					pool.execute(new PlayerHandler(new PlayerSocket(listener.accept()), data));
+			while(currentPlayerNumber < serverConfig.NOPlayers) {
+				PlayerHandler ph = listener.getPlayer();
+				if(ph != null) {
+					currentPlayerNumber++;
+					pool.execute(listener.getPlayer());
 				}
 			}
-			catch(IOException e) {
-				
-			}
+	
 			
 			// Give all players informations about colors
 			sendColorInfo();
 			
 			// Game
-			data.game = new Game(gameRules);
-			broadcast("GAME_START");
+			data.game = new StandardGame(gameRules);
+			data.broadcast("GAME_START");
 			
 			Iterator<String> playerNames = data.getNames().iterator();
 			
@@ -86,11 +78,11 @@ public class Server {
 				if(!playerNames.hasNext())
 					playerNames = data.getNames().iterator();
 				
-				broadcast("MOVE_NOW " + playerNames.next());
+				data.broadcast("MOVE_NOW " + playerNames.next());
 				try {
 					pool.wait();
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					
 				}
 				
 			}
@@ -100,7 +92,11 @@ public class Server {
 	}
 	
 	public static void main(String[] args) {
-		Server s = new Server();
+		Config config = new Config();
+		config.port = 55000;
+		config.NOPlayers = 2;
+		ServerListener listener = new ServerListener(config.port, SharedData.getInstance());
+		Server s = new Server(listener, config, SharedData.getInstance());
 		s.start();
 	}
 }
