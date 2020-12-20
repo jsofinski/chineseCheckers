@@ -11,8 +11,6 @@ import java.awt.event.MouseMotionAdapter;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import sun.java2d.loops.DrawLine;
-
 public class GameFrame extends JFrame {
 	
 	int width;

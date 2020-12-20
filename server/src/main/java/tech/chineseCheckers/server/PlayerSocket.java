@@ -1,27 +1,24 @@
 package tech.chineseCheckers.server;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class PlayerSocket {
 
 	private Socket socket;
-	private PrintWriter out;
-	private Scanner in;
+	private DataOutputStream  out;
+	private DataInputStream  in;
 	
 	public PlayerSocket(Socket socket) throws IOException {
 		this.socket = socket;
-		out = new PrintWriter(socket.getOutputStream());
-		in = new Scanner(socket.getInputStream());
+		out = new DataOutputStream(socket.getOutputStream());
+		in = new DataInputStream(socket.getInputStream());
 	
 	}
 	
 	public void close() {
-		out.close();
-		in.close();
-
 		try {
 			socket.close();
 		} catch (IOException e) {
@@ -29,12 +26,23 @@ public class PlayerSocket {
 	}
 	
 	public void send(String str) {
-		out.println(str);
+		System.out.println("Send: " + str);
+		try {
+			out.writeUTF(str);
+		} catch (IOException e) {
+			
+		}
 	}
 	
 	public String recive() {
-		String temp = in.nextLine();
-		return temp;
+		String temp;
+		try {
+			temp = in.readUTF();
+			return temp;
+		} catch (IOException e) {
+			return "";
+		}
+		
 	}
 	
 	

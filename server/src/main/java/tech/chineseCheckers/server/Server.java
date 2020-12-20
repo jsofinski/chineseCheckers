@@ -60,7 +60,8 @@ public class Server {
 				PlayerHandler ph = listener.getPlayer();
 				if(ph != null) {
 					currentPlayerNumber++;
-					pool.execute(listener.getPlayer());
+					UserInterface.print("Player connected");
+					pool.execute(ph);
 				}
 			}
 	

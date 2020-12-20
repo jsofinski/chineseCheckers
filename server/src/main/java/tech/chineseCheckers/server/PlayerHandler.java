@@ -14,6 +14,7 @@ public class PlayerHandler implements Runnable {
 	}
 
 	private String reciveName() {
+		System.out.println("Inside ReciveName");
 		String temp;
 		while(true) {
 			Set<String> names = data.getNames();
@@ -37,7 +38,6 @@ public class PlayerHandler implements Runnable {
 	
 	public void run() {
 		try {
-			
 			name = reciveName();
 
 			data.addPlayerSocket(player);

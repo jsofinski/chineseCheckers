@@ -19,6 +19,7 @@ public class Client {
 		do {
 			
 			returnMessage = server.getMessage();
+			System.out.println("Recived: " + returnMessage);
 			if(returnMessage.equals("NAME_GET")) {
 				name = startMenu.getName();
 				server.sentMessage("NAME_SET " + name);

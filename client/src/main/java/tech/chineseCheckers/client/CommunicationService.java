@@ -1,5 +1,7 @@
 package tech.chineseCheckers.client;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -9,15 +11,15 @@ import java.util.Scanner;
 public class CommunicationService {
 	
 	private Socket socket;
-	private Scanner in;
-	private PrintWriter out;
+	private DataOutputStream  out;
+	private DataInputStream  in;
 	
 	public boolean connect(String IP, int port) {
 		try {
 			socket = new Socket(IP, port);
 			
-			in = new Scanner(socket.getInputStream());
-			out = new PrintWriter(socket.getOutputStream());
+			in = new DataInputStream(socket.getInputStream());
+			out = new DataOutputStream(socket.getOutputStream());
 			
 			
 		} catch (UnknownHostException e) {
@@ -30,9 +32,23 @@ public class CommunicationService {
 	}
 	
 	public String getMessage() {
-		return in.nextLine();
+		System.out.println("Inside get.");
+		String mess;
+		try {
+			mess = in.readUTF();
+			System.out.println("Recieved" + mess);
+			return mess;
+		} catch (IOException e) {
+			System.out.println("Failed");
+			return "";
+		}
+		
 	}
 	public void sentMessage(String message) {
-		out.println(message);
+		try {
+			out.writeUTF(message);
+		} catch (IOException e) {
+			
+		}
 	}
 }
