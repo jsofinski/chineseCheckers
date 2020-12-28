@@ -15,7 +15,9 @@ import java.awt.geom.Ellipse2D.Float;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
-
+/**
+ * Main user gui, gets input from player and shows moves of others
+ */
 public class Board extends JPanel implements ActionListener, MouseMotionListener, MouseListener {
 	
 	int[] fieldArray;
@@ -29,7 +31,13 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 	CommunicationService server;
 	boolean myTurn;
 
-	
+	/**
+	 * When game starts, eveything is set,
+	 * @param size - size of every pawn and field,
+	 * @param gameConfig - configuration of current game, has information of every players pawns positions
+	 * @param server - used for sending moves
+	 * @param myName - nick of player
+	 */
 	public Board(int size, GameConfig gameConfig, CommunicationService server, String myName) {
 		this.server = server;
 		this.size = size;
@@ -57,7 +65,9 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 			this.setPossibleFields(g);
 		}
 	}
-	
+	/**
+	 * 
+	 */
 	private void paintPawns(Graphics g) {
 		for (Player player: this.players) {
 			for (Pawn pawn: player.getMyPawns()) {
@@ -66,13 +76,15 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 			}
 		}
 	}
-	
+	/**
+	 * Draws box with all players and possibly about player turn
+	 */
 	private void printPlayers(Graphics g) {
 		int x = 750;
 		int y = 40;
 		g.setColor(Color.LIGHT_GRAY);
 		g.fillRect(x - this.size/2, this.size/2, 100, 200);
-
+		
 		for (Player player: this.players) {
 			if (player.equals(this.me)) {
 				g.setFont(new Font("default", Font.BOLD, 12));
@@ -85,15 +97,24 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 			y += (this.size/2);
 			g.setColor(Color.black);
 		}
+		if (this.myTurn) {
+			g.setFont(new Font("default", Font.BOLD, 12));
+			g.setColor(Color.black);
+			g.drawString("TWOJA TURA", x, 200);
+		}
 	}
-	
+	/**
+	 * Draws all fields on board
+	 */
 	private void paintFields(Graphics g) {
 		for (Field field: this.fields) {
 			g.setColor(Color.LIGHT_GRAY);
 			g.fillOval(field.getX(), field.getY(), field.getSize(), field.getSize());
 		}
 	}
-
+	/**
+	 * Sets every field, getting information from
+	 */
 	private void setFields() {
 		this.fields = new ArrayList<Field>();
 		int xPosition = 400;
@@ -112,7 +133,9 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 			xPosition = 400;
 		}
 	}
-	
+	/**
+	 * 
+	 */
 	private void setPawns() {
 		this.pawns = new ArrayList<Pawn>();
 		for (Player player: this.players) {
@@ -144,7 +167,9 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 			}
 		}
 	}	
-	
+	/**
+	 * 
+	 */
 	private boolean canPawnMoveThere(Pawn pawn, Field field) {
 		int fieldX = field.getX();
 		int fieldY = field.getY();
@@ -158,7 +183,9 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 		}
 		return false;
 	}
-	
+	/**
+	 * 
+	 */
 	private boolean isFieldOccupied(Field field) {
 		for (Pawn anyPawn: this.pawns) {
 			if (anyPawn.getX() == field.getX() && anyPawn.getY() == field.getY()) {
@@ -167,10 +194,12 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 		}
 		return false;
 	}
-	
+	/**
+	 * 
+	 */
 	private boolean canPawnHopThere(Pawn pawn, Field jumpOverField, Field destinationField) {
-		int innerDistanceX = (jumpOverField.getX() - this.activePawn.getX());
-		int innerDistanceY = (jumpOverField.getY() - this.activePawn.getY());
+		int innerDistanceX = (jumpOverField.getX() - pawn.getX());
+		int innerDistanceY = (jumpOverField.getY() - pawn.getY());
 		int fieldsDistanceX = (destinationField.getX() - jumpOverField.getX());
 		int fieldsDistanceY = (destinationField.getY() - jumpOverField.getY());
 		if (innerDistanceX == fieldsDistanceX && innerDistanceY == fieldsDistanceY) {
@@ -180,7 +209,9 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 		}
 		return false;
 	}
-	
+	/**
+	 * 
+	 */
 	private void setPossibleFields(Graphics g) {
 		this.possibleFields = new ArrayList<Field>();
 		for (Field field: this.fields) {
@@ -191,12 +222,27 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 					g.fillOval(field.getX(), field.getY(), field.getSize(), field.getSize());
 				}
 				else {
-					for (Field innerField: this.fields) {
-						if(this.canPawnHopThere(this.activePawn, field, innerField)) {
-							if (!this.isFieldOccupied(innerField)) {
-								this.possibleFields.add(innerField);
-								g.setColor(Color.GRAY);
-								g.fillOval(innerField.getX(), innerField.getY(), innerField.getSize(), innerField.getSize());
+					this.setHopsFields(this.activePawn, g, field);
+				}
+			}
+		}
+	}
+	private void setHopsFields(Pawn pawn, Graphics g, Field occupiedField) {
+		for (Field innerField: this.fields) {
+			if(this.canPawnHopThere(pawn, occupiedField, innerField)) {
+				if (!this.isFieldOccupied(innerField)) {
+					if(!this.possibleFields.contains(innerField)) {
+						this.possibleFields.add(innerField);
+						g.setColor(Color.GRAY);
+						g.fillOval(innerField.getX(), innerField.getY(), innerField.getSize(), innerField.getSize());
+						
+						Pawn tempPawn = new Pawn(999);
+						tempPawn.setPosition(innerField.getX(), innerField.getY());
+						for (Field doubleInnerField: this.fields) {
+							if(this.canPawnMoveThere(tempPawn, doubleInnerField)) {
+								if (this.isFieldOccupied(doubleInnerField)) {
+									this.setHopsFields(tempPawn, g, doubleInnerField);
+								}
 							}
 						}
 					}
@@ -204,6 +250,9 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 			}
 		}
 	}
+	/**
+	 * 
+	 */
 	public void moveByIds(String idFrom, String idTo) {
 		Field fieldFrom = null;
 		Field fieldTo = null;
@@ -226,7 +275,9 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 		}
 		this.repaint();
 	}
-	
+	/**
+	 * 
+	 */
 	private void movePawn(Pawn pawn, Field field) {
 		
 		if(this.possibleFields.contains(field)) {
@@ -249,7 +300,9 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 		}
  
 	}
-	
+	/**
+	 * 
+	 */
 	public void mouseClicked(MouseEvent arg0) {
 		boolean pawnFound = false;
 		for (Pawn pawn: this.pawns) {
