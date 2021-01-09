@@ -292,7 +292,6 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 				this.server.sentMessage(("MOVE " + fromField.getId() + " " + field.getId()));
 			}
 				
-			this.activePawn.setPosition(field.getX(), field.getY());
 			this.activePawn = null;
 		}
 		else {
@@ -340,6 +339,7 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 	public void setMyTurn(boolean myTurn) {
 		System.out.println("Can move: " + myTurn);
 		this.myTurn = myTurn;
+		this.repaint();
 	}
 	public boolean myTurn() {return myTurn;}
 

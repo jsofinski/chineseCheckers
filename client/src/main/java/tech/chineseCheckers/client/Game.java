@@ -1,5 +1,7 @@
 package tech.chineseCheckers.client;
-
+/**
+ * 
+ */
 public class Game {
 	
 	CommunicationService server;
@@ -12,7 +14,9 @@ public class Game {
 		gameConfig = new GameConfig();
 		this.name = name;
 	}
-		
+	/**
+	 * 
+	 */
 	public void start() {
 		while (true) {
 			String input = this.server.getMessage();
@@ -28,8 +32,7 @@ public class Game {
 					break;
 				} 
 				case "MOVE": {
-					if(!board.myTurn())
-						this.board.moveByIds(res[1], res[2]);
+					this.board.moveByIds(res[1], res[2]);
 					break;
 				}
 				case "MOVE_NOW": {
