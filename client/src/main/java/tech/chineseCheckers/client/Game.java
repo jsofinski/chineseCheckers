@@ -18,13 +18,22 @@ public class Game {
 	 * 
 	 */
 	public void start() {
-		while (true) {
+		boolean gameEnded = false;
+		while (!gameEnded) {
 			String input = this.server.getMessage();
 			String[] res = input.split("\\s");
 			switch (res[0]) {
 				case "GAME_START": {
 					this.board = new Board(40, this.gameConfig, this.server, this.name);
 					gameFrame = new GameFrame(board, name);
+					break;
+				}
+				case "GAME_END": {
+					gameEnded = true;
+					break;
+				}
+				case "WINNER": {
+					System.out.println("Winner: " + res[1]);
 					break;
 				}
 				case "NUMBER_OF_PLAYERS": {
