@@ -54,7 +54,7 @@ public class PlayerHandler implements Runnable {
 				switch (res[0]) {
 					case "DISCONNECT": {connected = false;} break;
 					case "MOVE": {
-						if(!data.game.interpretMove(input.substring(5)))
+						if(!data.game.interpretMove(name, input.substring(5)))
 							player.send("MOVE_BAD");
 						else {
 							data.broadcast(input);

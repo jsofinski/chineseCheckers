@@ -1,8 +1,10 @@
 package tech.chineseCheckers.server;
 
 import java.util.Set;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -16,6 +18,7 @@ public class Server {
 	private SharedData data;
 	private ServerListener listener;
 	private Object lock;
+	private Set<String> colors;
 	
 	public Server(ServerListener listener, Config config, SharedData data) {
 		this.data = data;
@@ -23,6 +26,14 @@ public class Server {
 		this.listener = listener;
 		this.gameRules = new GameRules();
 		this.lock = new Object();
+		colors = new HashSet<String>();
+		colors.add("WHITE");
+		colors.add("RED");
+		colors.add("BLUE");
+		colors.add("BLACK");
+		colors.add("GREEN");
+		colors.add("YELLOW");
+		
 	}
 	
 	private void sendNickInfo() {
@@ -39,17 +50,13 @@ public class Server {
 	
 	
 	private void sendColorInfo() {
-		Set<String> colors = new HashSet<String>();
-		colors.add("WHITE");
-		colors.add("RED");
-		colors.add("BLUE");
-		colors.add("BLACK");
-		colors.add("GREEN");
-		colors.add("YELLOW");
 		Iterator<String> iter = data.getNames().iterator();
 		Iterator<String> col = colors.iterator();
+		int cID = 0;
 		while(iter.hasNext()) {
-			data.broadcast("COLOR_SET " + iter.next() + " " + col.next());	
+			String name = iter.next();
+			data.broadcast("COLOR_SET " + name + " " + col.next());	
+			data.game.addPlayer(name);
 		}
 	}
 	
@@ -60,6 +67,8 @@ public class Server {
 			UserInterface.print("Unable to create listener");
 			return;
 		}
+		
+		data.game = new StandardGame(gameRules);
 		
 		while(true) {
 			UserInterface.print("Starting game");
@@ -95,23 +104,36 @@ public class Server {
 			sendNickInfo();
 			
 			// Game
-			data.game = new StandardGame(gameRules);
+			//data.game = new StandardGame(gameRules);
 			data.broadcast("GAME_START");
 			
 			Iterator<String> playerNames = data.getNames().iterator();
+			List<String> winners = new ArrayList<String>();
 			
 			while(!data.game.ended()) {
 				if(!playerNames.hasNext())
 					playerNames = data.getNames().iterator();
-				
-				data.broadcast("MOVE_NOW " + playerNames.next());
+				String player = playerNames.next();
+				if(winners.contains(player))
+					continue;
+				UserInterface.print("Move of " + player);
+				data.broadcast("MOVE_NOW " + player);
 				synchronized(lock) {
 					try {
 						lock.wait();
 					} catch (InterruptedException e) {
 					}
 				}
+				String winner = data.game.winner();
+				winners.add(winner);
+				if(winner != "") {
+					data.broadcast("WINNER " + winner);
+					UserInterface.print("Winner: " + winner);
+				}
 			}
+			
+			UserInterface.print("Game ended.");
+			data.broadcast("GAME_END");
 		}
 	}
 	
