@@ -29,6 +29,8 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 	Pawn activePawn;
 	Player me;
 	CommunicationService server;
+	String winner;
+	Boolean gameEnded;
 	boolean myTurn;
 
 	/**
@@ -41,6 +43,7 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 	public Board(int size, GameConfig gameConfig, CommunicationService server, String myName) {
 		this.server = server;
 		this.size = size;
+		this.gameEnded = false;
 		this.fieldArray = gameConfig.fieldArray;
 		this.players = new ArrayList<Player>();
 		for(Player player: gameConfig.players) {
@@ -56,7 +59,6 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 		this.myTurn = false;
 	}
 	
-
 	public void paintComponent(Graphics g) {
 		this.paintFields(g);
 		this.paintPawns(g);
@@ -64,6 +66,7 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 		if (this.activePawn != null) {
 			this.setPossibleFields(g);
 		}
+		this.paintEndWinner(g);
 	}
 	/**
 	 * 
@@ -80,6 +83,7 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 	 * Draws box with all players and possibly about player turn
 	 */
 	private void printPlayers(Graphics g) {
+		
 		int x = 750;
 		int y = 40;
 		g.setColor(Color.LIGHT_GRAY);
@@ -103,6 +107,24 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 			g.drawString("TWOJA TURA", x, 200);
 		}
 	}
+	/**
+	 * Draws information about the winner and if the game is over, end game notification
+	 */
+	private void paintEndWinner(Graphics g) {
+		int x = 20;
+		int y = 40;
+		g.setColor(Color.black);
+		g.setFont(new Font("default", Font.BOLD, 20));
+		
+		if (this.winner != null) {
+			g.drawString("ZWYCIÊ¯Y£ " + this.winner, x, y);
+			this.winner = null;
+		}
+		if (this.gameEnded) {
+			g.drawString("GRA ZOSTA£A ZAKOÑCZONA", x, y + 40);
+		}
+	}
+	
 	/**
 	 * Draws all fields on board
 	 */
@@ -137,6 +159,7 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 	 * 
 	 */
 	private void setPawns() {
+
 		this.pawns = new ArrayList<Pawn>();
 		for (Player player: this.players) {
 			int xPosition = 400;
@@ -167,6 +190,8 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 			}
 		}
 	}	
+	
+	
 	/**
 	 * 
 	 */
@@ -227,6 +252,9 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 			}
 		}
 	}
+	/**
+	 * 
+	 */
 	private void setHopsFields(Pawn pawn, Graphics g, Field occupiedField) {
 		for (Field innerField: this.fields) {
 			if(this.canPawnHopThere(pawn, occupiedField, innerField)) {
@@ -250,6 +278,7 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 			}
 		}
 	}
+	
 	/**
 	 * 
 	 */
@@ -299,6 +328,26 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 		}
  
 	}
+	
+	
+	protected void endGame() {
+		this.gameEnded = true;
+		
+	}
+	
+	protected void setWinner(String winner) {
+		this.winner = winner;
+	}
+	
+	public void setMyTurn(boolean myTurn) {
+		System.out.println("Can move: " + myTurn);
+		this.myTurn = myTurn;
+		this.repaint();
+	}
+	public boolean myTurn() {
+		return myTurn;
+	}
+
 	/**
 	 * 
 	 */
@@ -336,13 +385,6 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 		}
 	}
 	
-	public void setMyTurn(boolean myTurn) {
-		System.out.println("Can move: " + myTurn);
-		this.myTurn = myTurn;
-		this.repaint();
-	}
-	public boolean myTurn() {return myTurn;}
-
 	public void mouseEntered(MouseEvent arg0) {	}
 
 	public void mouseExited(MouseEvent arg0) { }

@@ -30,9 +30,11 @@ public class Game {
 				}
 				case "GAME_END": {
 					gameEnded = true;
+					this.board.endGame();
 					break;
 				}
 				case "WINNER": {
+					this.board.setWinner(res[1]);
 					System.out.println("Winner: " + res[1]);
 					break;
 				}
@@ -46,9 +48,9 @@ public class Game {
 				}
 				case "MOVE_NOW": {
 					if(res[1].equals(this.name))
-						board.setMyTurn(true);
+						this.board.setMyTurn(true);
 					else
-						board.setMyTurn(false);
+						this.board.setMyTurn(false);
 					break;
 				}
 				case "PLAYER": {
