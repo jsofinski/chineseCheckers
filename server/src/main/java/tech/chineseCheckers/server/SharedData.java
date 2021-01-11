@@ -43,6 +43,8 @@ public class SharedData {
 		}
 	}
 	
+	public Game getGame() { synchronized(mutex) {return game;}}
+	
 	public void setReady() { synchronized(mutex) {ready++;} }
 	public void setNotReady() { synchronized(mutex) {ready--;}}
 	public int ready() {synchronized(mutex) {return ready;} }
