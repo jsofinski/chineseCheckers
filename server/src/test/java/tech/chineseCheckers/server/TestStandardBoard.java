@@ -12,7 +12,7 @@ public class TestStandardBoard {
 		GameRules r = new GameRules();
 		r.canLeaveGoalZone = false;
 		r.pawnsSwappable = true;
-		Game g = new StandardGame(r);
+		Game g = new StandardGame(r,2);
 		g.addPlayer("A");
 		g.addPlayer("B");
 		
@@ -31,7 +31,7 @@ public class TestStandardBoard {
 		
 		// Check if player can leave goal zone if rules allow it
 		GameRules r2 = new GameRules(1, false, true, true, true);
-		Game g2 = new StandardGame(r2);
+		Game g2 = new StandardGame(r2,2);
 		g2.addPlayer("A");
 		g2.addPlayer("B");
 		g2.interpretMove("A", "0 111");
@@ -42,7 +42,7 @@ public class TestStandardBoard {
 		// Check win, when opponents pawns count towards own pawns
 		GameRules r = new GameRules();
 		r.opponentsPawnsCounts = true;
-		Game g = new StandardGame(r);
+		Game g = new StandardGame(r,2);
 		g.addPlayer("A");
 		g.addPlayer("B");
 		// No winners should be present
@@ -56,7 +56,7 @@ public class TestStandardBoard {
 		// Check win when opponents pawns dont count towards own goal
 		GameRules r2 = new GameRules();
 		r2.opponentsPawnsCounts = false;
-		Game g2 = new StandardGame(r2);
+		Game g2 = new StandardGame(r2,2);
 		g2.interpretMove("B", "111 102");
 		g2.interpretMove("A", "0 111");
 		assertTrue(g.winner().equals(""));

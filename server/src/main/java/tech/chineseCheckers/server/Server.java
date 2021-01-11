@@ -148,7 +148,7 @@ public class Server {
 		config.port = 55000;
 		config.NOPlayers = Integer.parseInt(JOptionPane.showInputDialog("Podaj liczbe graczy","2"));
 		ServerListener listener = new ServerListener(config.port, SharedData.getInstance());
-		Server s = new Server(listener, config, SharedData.getInstance(), new GameRules(), new StandardGame(new GameRules()));
+		Server s = new Server(listener, config, SharedData.getInstance(), new GameRules(), new StandardGame(new GameRules(), config.NOPlayers));
 		s.start();
 	}
 }
