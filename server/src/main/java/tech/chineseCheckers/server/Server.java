@@ -10,21 +10,28 @@ import java.util.concurrent.Executors;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-
+/***
+ * Waits for players, notifies about colors, turn, wins and game end. It also starts threads
+ * that will handle individuals players.
+ * @author Jakub
+ *
+ */
 public class Server {
 
 	private GameRules gameRules;
+	private Game game;
 	private Config serverConfig;
 	private SharedData data;
 	private ServerListener listener;
 	private Object lock;
 	private Set<String> colors;
 	
-	public Server(ServerListener listener, Config config, SharedData data) {
+	public Server(ServerListener listener, Config config, SharedData data, GameRules rules, Game game) {
 		this.data = data;
 		this.serverConfig = config;
 		this.listener = listener;
-		this.gameRules = new GameRules();
+		this.gameRules = rules;
+		this.game = game;
 		this.lock = new Object();
 		colors = new HashSet<String>();
 		colors.add("WHITE");
@@ -68,7 +75,7 @@ public class Server {
 			return;
 		}
 		
-		data.game = new StandardGame(gameRules);
+		data.game = game;
 		
 		while(true) {
 			UserInterface.print("Starting game");
@@ -104,7 +111,6 @@ public class Server {
 			sendNickInfo();
 			
 			// Game
-			//data.game = new StandardGame(gameRules);
 			data.broadcast("GAME_START");
 			
 			Iterator<String> playerNames = data.getNames().iterator();
@@ -142,7 +148,7 @@ public class Server {
 		config.port = 55000;
 		config.NOPlayers = Integer.parseInt(JOptionPane.showInputDialog("Podaj liczbe graczy","2"));
 		ServerListener listener = new ServerListener(config.port, SharedData.getInstance());
-		Server s = new Server(listener, config, SharedData.getInstance());
+		Server s = new Server(listener, config, SharedData.getInstance(), new GameRules(), new StandardGame(new GameRules()));
 		s.start();
 	}
 }

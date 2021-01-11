@@ -9,7 +9,10 @@ public class TestStandardBoard {
 	
 	@Test
 	void testMoves() {
-		Game g = new StandardGame(new GameRules());
+		GameRules r = new GameRules();
+		r.canLeaveGoalZone = false;
+		r.pawnsSwappable = true;
+		Game g = new StandardGame(r);
 		g.addPlayer("A");
 		g.addPlayer("B");
 		
@@ -25,28 +28,37 @@ public class TestStandardBoard {
 		assertTrue(g.interpretMove("A", "0 111"));
 		//		Try to leave
 		assertFalse(g.interpretMove("A", "111 0"));
+		
+		// Check if player can leave goal zone if rules allow it
+		GameRules r2 = new GameRules(1, false, true, true, true);
+		Game g2 = new StandardGame(r2);
+		g2.addPlayer("A");
+		g2.addPlayer("B");
+		g2.interpretMove("A", "0 111");
+		assertTrue(g2.interpretMove("A", "111 102"));
 	}
 	@Test
 	void testWinConditions() {
-		// Check win, when opponents pwan counts towards own goal
+		// Check win, when opponents pawns count towards own pawns
 		GameRules r = new GameRules();
-		r.blockRule = GameRules.BlockRules.CountTowardsWin;
+		r.opponentsPawnsCounts = true;
 		Game g = new StandardGame(r);
 		g.addPlayer("A");
 		g.addPlayer("B");
+		// No winners should be present
+		assertTrue(g.winner().equals(""));
+		
+		
 		g.interpretMove("B", "111 102");
 		g.interpretMove("A", "0 111");
 		assertTrue(g.winner().equals("A"));
 		
 		// Check win when opponents pawns dont count towards own goal
 		GameRules r2 = new GameRules();
-		r2.blockRule = GameRules.BlockRules.Lose;
+		r2.opponentsPawnsCounts = false;
 		Game g2 = new StandardGame(r2);
 		g2.interpretMove("B", "111 102");
 		g2.interpretMove("A", "0 111");
 		assertTrue(g.winner().equals(""));
-		
-		
-		
-	}
+	}	
 }

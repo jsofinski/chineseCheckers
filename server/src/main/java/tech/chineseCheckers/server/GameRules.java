@@ -1,30 +1,35 @@
 package tech.chineseCheckers.server;
 
+/**
+ * Hold game rules. Currently supporter rules are:
+ * - players can skip turns
+ * - if the opponents pawns count toward owns when checking for win condition
+ * - if the pawns can leave goal zone
+ * - if player can swap pawns with another player
+ * It also holds how many wins are necessary for a game to end.
+ * @author Jakub
+ *
+ */
 public class GameRules {
 	
-	public enum BlockRules {
-		Lose,
-		Swap,
-		CountTowardsWin
-	}
-	
-	public BlockRules blockRule;
-	
-	public boolean loseIfUnableToMove;
 	public boolean turnSkippable;
-	public boolean gameStopsAtFirstWin;
+	public int winsBeforeGameEnds;
+	public boolean opponentsPawnsCounts;
+	public boolean pawnsSwappable;
+	public boolean canLeaveGoalZone;
 	
 	public GameRules() {
-		// Set default rules
-		blockRule = BlockRules.Lose;
-		loseIfUnableToMove = true;
+		opponentsPawnsCounts = false;
+		pawnsSwappable = true;
 		turnSkippable = false;
-		gameStopsAtFirstWin = true;
+		winsBeforeGameEnds = 1;
+		canLeaveGoalZone = false;
 	}
-	public GameRules(BlockRules br, boolean loseIfUnableToMove, boolean turnSkippable, boolean gameStopsAtFirstWin) {
-		this.blockRule = br;
-		this.loseIfUnableToMove = loseIfUnableToMove;
+	public GameRules(int winsBeforeGameEnds, boolean turnSkippable, boolean pawnsSwappable, boolean opponentsPawnsCounts, boolean canLeaveGoalZone) {
+		this.opponentsPawnsCounts = opponentsPawnsCounts;
+		this.pawnsSwappable = pawnsSwappable;
 		this.turnSkippable = turnSkippable;
-		this.gameStopsAtFirstWin = gameStopsAtFirstWin;
+		this.winsBeforeGameEnds = winsBeforeGameEnds;
+		this.canLeaveGoalZone = canLeaveGoalZone;
 	}
 }

@@ -2,6 +2,11 @@ package tech.chineseCheckers.server;
 
 import java.util.Scanner;
 
+/***
+ * Provides access to standard IO with console.
+ * @author Jakub
+ *
+ */
 public class UserInterface {
 	
 	private static Scanner sc = new Scanner(System.in);

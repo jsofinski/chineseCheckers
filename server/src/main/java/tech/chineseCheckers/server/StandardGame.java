@@ -5,7 +5,12 @@ import java.util.Arrays;
 //import java.util.Iterator;
 
 // import org.graalvm.compiler.core.common.Fields;
-
+/***
+ * Implementation of standard Chineese Checkers game. Interprets
+ * player moves and check if any player won or the game ended.
+ * @author Jakub
+ *
+ */
 public class StandardGame implements Game {
 
 	int[] rowSizes;
@@ -19,25 +24,6 @@ public class StandardGame implements Game {
 	int noWinners;
 	
 	private void initGame() {
-		rowSizes = new int[17];
-		rowSizes[0] = 1;
-		rowSizes[1] = 2;
-		rowSizes[2] = 3;
-		rowSizes[3] = 4;
-		rowSizes[4] = 13;
-		rowSizes[5] = 12;
-		rowSizes[6] = 11;
-		rowSizes[7] = 10;
-		rowSizes[8] = 9;
-		rowSizes[9] = 10;
-		rowSizes[10] = 11;
-		rowSizes[11] = 12;
-		rowSizes[12] = 13;
-		rowSizes[13] = 4;
-		rowSizes[14] = 3;
-		rowSizes[15] = 2;
-		rowSizes[16] = 1;
-		
 		fields = new int[121];
 		players = new String[6];
 		winners = new int[6];
@@ -52,11 +38,8 @@ public class StandardGame implements Game {
 		Arrays.fill(winners,0);
 		noPlayers = 0;
 		noWinners = 0;
-		
-		
 	}
-	
-	
+
 	
 	public StandardGame(GameRules rules) {
 		initGame();
@@ -85,12 +68,7 @@ public class StandardGame implements Game {
 			int sourceID = Integer.parseInt(split[0]);
 			int targetID = Integer.parseInt(split[1]);
 			
-			// Check if targetID is empty
-			if(fields[targetID] != -1) {
-				return false;
-			}
-			
-			// Find player id from name
+			// Get player ID 
 			int pID = -1;
 			for(int i = 0; i < 6; i++) {
 				if(players[i] == (name)) {
@@ -102,24 +80,39 @@ public class StandardGame implements Game {
 			// Check if players move his pawn
 			if(fields[sourceID] != pID)
 				return false;
-			
-			// Check if players is trying to move out of opponents triangle
+						
+			// Check if pawns are in goal zone
 			int eID = pID + (pID % 2 == 0 ? 1 : -1);
 			int eIDX = eID * 10;
-			boolean sourceInT = false;
-			boolean targetInT = false;
+			boolean sourceInGoalZone = false;
+			boolean targetInGoalZone = false;
 			for(int i = 0 ; i < 10; i++) {
 				if(playersFieldsIDs[eIDX + i] == sourceID)
-					sourceInT = true;
-				if(playersFieldsIDs[eIDX + 1] == targetID)
-					targetInT = true;
-				
+					sourceInGoalZone = true;
+				if(playersFieldsIDs[eIDX + i] == targetID)
+					targetInGoalZone = true;		
 			}
-			if(sourceInT && (!targetInT))
-				return false;
 			
-			fields[targetID] = fields[sourceID];
-			fields[sourceID] = -1;
+			// Pawns can swap in goal zone if rules allow that
+			if(rules.pawnsSwappable && targetInGoalZone) {
+				int t = fields[targetID];
+				fields[targetID] = fields[sourceID];
+				fields[sourceID] = t;
+				return true;
+			}
+			// Check if players is trying to move pawn into another pawn not in goal zone
+			else if(fields[targetID] != -1) {
+				return false;
+			}
+			// Check if player is trying to leave the goal zone
+			else if((!rules.canLeaveGoalZone)&&(sourceInGoalZone)&&(!targetInGoalZone)) {
+				return false;
+			}
+			// Move pawn into free field
+			else {
+				fields[targetID] = fields[sourceID];
+				fields[sourceID] = -1;
+			}
 			
 		}
 		catch(Exception e) {
@@ -129,7 +122,7 @@ public class StandardGame implements Game {
 	}
 	@Override
 	public boolean ended() {
-		if(rules.gameStopsAtFirstWin && noWinners > 0)
+		if(rules.winsBeforeGameEnds == noWinners)
 			return true;
 		else if(noWinners == noPlayers)
 			return true;
@@ -165,7 +158,7 @@ public class StandardGame implements Game {
 				
 			}
 			
-			if((inTarget == 10) || (rules.blockRule == GameRules.BlockRules.CountTowardsWin && free == 0 && inTarget > 0)) {
+			if((inTarget == 10) || (rules.opponentsPawnsCounts && free == 0 && inTarget > 0)) {
 				winners[i] = 1;
 				noWinners++;
 				return players[i];

@@ -1,7 +1,13 @@
 package tech.chineseCheckers.server;
 
 import java.util.Set;
-
+/***
+ * Given socket, will handle all communication with player.
+ * Currently it's accepting player name and forward moves to 
+ * Board class for further interpretation.
+ * @author Jakub
+ *
+ */
 public class PlayerHandler implements Runnable {
 	private String name;
 	PlayerSocket player;
