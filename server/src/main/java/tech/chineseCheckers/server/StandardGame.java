@@ -5,7 +5,12 @@ import java.util.Arrays;
 //import java.util.Iterator;
 
 // import org.graalvm.compiler.core.common.Fields;
-
+/***
+ * Implementation of standard Chineese Checkers game. Interprets
+ * player moves and check if any player won or the game ended.
+ * @author Jakub
+ *
+ */
 public class StandardGame implements Game {
 
 	int[] rowSizes;

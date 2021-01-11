@@ -3,6 +3,12 @@ package tech.chineseCheckers.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 
+/***
+ * It will listen for and accept new connection and convert them
+ * to PlayerHandled.
+ * @author Jakub
+ *
+ */
 public class ServerListener {
 	
 	ServerSocket listener;

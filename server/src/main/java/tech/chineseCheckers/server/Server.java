@@ -10,7 +10,12 @@ import java.util.concurrent.Executors;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-
+/***
+ * Waits for players, notifies about colors, turn, wins and game end. It also starts threads
+ * that will handle individuals players.
+ * @author Jakub
+ *
+ */
 public class Server {
 
 	private GameRules gameRules;

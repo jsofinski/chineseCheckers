@@ -3,6 +3,11 @@ package tech.chineseCheckers.server;
 import java.util.HashSet;
 import java.util.Set;
 
+/*** 
+ * Provides safe access to necessary data to all threads.
+ * @author Jakub
+ *
+ */
 public class SharedData {
 
 	private static SharedData instance;

@@ -1,5 +1,15 @@
 package tech.chineseCheckers.server;
 
+/**
+ * Hold game rules. Currently supporter rules are:
+ * - players can skip turns
+ * - if the opponents pawns count toward owns when checking for win condition
+ * - if the pawns can leave goal zone
+ * - if player can swap pawns with another player
+ * It also holds how many wins are necessary for a game to end.
+ * @author Jakub
+ *
+ */
 public class GameRules {
 	
 	public boolean turnSkippable;

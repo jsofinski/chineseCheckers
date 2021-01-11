@@ -5,6 +5,11 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+/***
+ * Handles sending and reciving information between server and client.
+ * @author Jakub
+ *
+ */
 public class PlayerSocket {
 
 	private Socket socket;
