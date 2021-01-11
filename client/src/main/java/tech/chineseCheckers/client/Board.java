@@ -59,6 +59,9 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
 		this.myTurn = false;
 	}
 	
+	/**
+	 * 
+	 */
 	public void paintComponent(Graphics g) {
 		this.paintFields(g);
 		this.paintPawns(g);
@@ -329,16 +332,20 @@ public class Board extends JPanel implements ActionListener, MouseMotionListener
  
 	}
 	
-	
+	/**
+	 * 
+	 */
 	protected void endGame() {
 		this.gameEnded = true;
 		
 	}
-	
+	/**
+	 * 
+	 */
 	protected void setWinner(String winner) {
 		this.winner = winner;
 	}
-	
+
 	public void setMyTurn(boolean myTurn) {
 		System.out.println("Can move: " + myTurn);
 		this.myTurn = myTurn;

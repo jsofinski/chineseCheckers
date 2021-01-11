@@ -1,5 +1,10 @@
 package tech.chineseCheckers.client;
 
+/**
+ * Represents each field of Chinese checkers.
+ * X and y positions allow to compare them with pawns to know from which field pawn jumped to which.
+ * Each has own id to easily send jump data to server.
+ */
 public class Field {
 	String id;
 	int size;

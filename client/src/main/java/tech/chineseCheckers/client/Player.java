@@ -3,6 +3,10 @@ package tech.chineseCheckers.client;
 import java.awt.Color;
 import java.util.ArrayList;
 
+/**
+ * Represents Chinese checkers player.
+ * Holds data required to set board and importantly, has player pawns.
+ */
 public class Player {
 	
 	ArrayList<Pawn> myPawns;
@@ -10,6 +14,9 @@ public class Player {
 	String nick;
 	int[][] playerPawnsPositions;
 	
+	/**
+	 * Every player must have pawns so value is assigned in constructor
+	 */
 	public Player() {
 		this.myPawns = new ArrayList<Pawn>();
 	}

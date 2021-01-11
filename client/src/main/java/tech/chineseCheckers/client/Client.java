@@ -1,10 +1,14 @@
 package tech.chineseCheckers.client;
 
+/**
+ * Main class, represents client entity of Chinese Checkers player.
+ */
 public class Client {
 
+	/**
+	 * Main method connects to server, gets user name and starts the Game life cycle
+	 */
 	public static void main(String[] args) {
-		System.out.println("Hi from client.");
-		
 		StartMenu startMenu = new StartMenu();
 		
 		CommunicationService server = new CommunicationService();
@@ -29,9 +33,8 @@ public class Client {
 		} while(!returnMessage.equals("NAME_ACCEPTED"));
 				
 		Game game = new Game(server, name);
-		while(!returnMessage.equals("GAME_START")) {
-			game.start();
-		}
+		game.start();
+
 	}
 
 }

@@ -4,7 +4,12 @@ import java.awt.Color;
 import java.awt.Shape;
 import java.util.ArrayList;
 
+/**
+ * Game configuration holds all data to draw at @Board any shape board and
+ * pawns positions of all of the players in any number of player case.
+ */
 public class GameConfig {
+	
 	int[] fieldArray;
 	ArrayList<Field> fields;
 	ArrayList<Player> players;
@@ -13,6 +18,9 @@ public class GameConfig {
 		this.setFieldArray();
 	}
 	
+	/**
+	 * Sets players colours and pawns positions depending on number of players
+	 */
 	protected void setPlayers(int playerAmount) {
 		this.players = new ArrayList<Player>();
 		Player player1 = new Player();
@@ -72,10 +80,12 @@ public class GameConfig {
 				this.players.add(player5);
 				this.players.add(player6);
 				break;
-			
 		}
 	}
 
+	/**
+	 * Sets shape of the board putting length of every row to each row.
+	 */
 	private void setFieldArray() {
 		this.fields = new ArrayList<Field>();
 		int[] tempArray;

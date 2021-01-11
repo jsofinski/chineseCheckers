@@ -1,10 +1,11 @@
 package tech.chineseCheckers.client;
 
 import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Shape;
-import java.awt.geom.Ellipse2D;
 
+/**
+ * Represents pawn on board. Each pawn has it own id, his owner nick and colour
+ * and x,y positions which allow to calculate neighbour pawns.
+ */
 public class Pawn {
 	
 	Color color;

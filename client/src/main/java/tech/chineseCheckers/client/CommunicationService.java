@@ -6,12 +6,19 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+/**
+ * Service that allows to connect with server, send to and receive data from server.
+ */
 public class CommunicationService {
 	
 	private Socket socket;
 	private DataOutputStream  out;
 	private DataInputStream  in;
 	
+	/**
+	 * Connects with the server
+	 * @param IP host address 
+	 */
 	public boolean connect(String IP, int port) {
 		try {
 			socket = new Socket(IP, port);
@@ -28,7 +35,10 @@ public class CommunicationService {
 		
 		return true;
 	}
-	
+	/**
+	 * Receive message.
+	 * @return mess new message received from server
+	 */
 	public String getMessage() {
 		
 		String mess;
@@ -44,6 +54,10 @@ public class CommunicationService {
 		}
 		
 	}
+	/**
+	 * Sends message.
+	 * @param message send to server
+	 */
 	public void sentMessage(String message) {
 		try {
 			out.writeUTF(message);
