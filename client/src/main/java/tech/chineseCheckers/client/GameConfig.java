@@ -10,7 +10,6 @@ public class GameConfig {
 	ArrayList<Player> players;
 
 	public GameConfig() {
-		this.setPlayers(2);
 		this.setFieldArray();
 	}
 	
@@ -79,7 +78,25 @@ public class GameConfig {
 
 	private void setFieldArray() {
 		this.fields = new ArrayList<Field>();
-		int[] tempArray = {1,2,3,4,13,12,11,10,9,10,11,12,13,4,3,2,1};
+		int[] tempArray;
+		tempArray = new int[17];
+		tempArray[0] = 1;
+		tempArray[1] = 2;
+		tempArray[2] = 3;
+		tempArray[3] = 4;
+		tempArray[4] = 13;
+		tempArray[5] = 12;
+		tempArray[6] = 11;
+		tempArray[7] = 10;
+		tempArray[8] = 9;
+		tempArray[9] = 10;
+		tempArray[10] = 11;
+		tempArray[11] = 12;
+		tempArray[12] = 13;
+		tempArray[13] = 4;
+		tempArray[14] = 3;
+		tempArray[15] = 2;
+		tempArray[16] = 1;
 		this.fieldArray = tempArray;
 	}
 }
